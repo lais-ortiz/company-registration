@@ -1,11 +1,18 @@
+using CompanyRegistration.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddSingleton<ICompaniesService, CompaniesService>();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+var connectionString = builder.Configuration["CompaniesDatabase:ConnectionString"];
+var databaseName = builder.Configuration["CompaniesDatabase:DatabaseName"];
+var collectionName = builder.Configuration["CompaniesDatabase:CollectionName"];
 
 var app = builder.Build();
 
